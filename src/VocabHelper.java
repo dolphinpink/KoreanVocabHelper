@@ -53,15 +53,17 @@ public class VocabHelper {
 		    size = questionList.size();
 		    int mode = 0;
 		    do {
-		    	System.out.println("choose mode: 1 or 2");
+		    	System.out.println("choose mode: with answers, without answers, or rng test");
 		    	mode = in.nextInt();
-		    } while (mode < 1 || mode > 2);
+		    } while (mode < 1 || mode > 3);
 		    
 		    //different casing modes
 		    switch (mode) {
 			    case 1: quizWithAnswers();
 			    	break;
 			    case 2: quizWithoutAnswers();
+			    	break;
+			    case 3: rngTest();
 			    	break;
 		    
 		    }
@@ -122,7 +124,6 @@ public class VocabHelper {
 		
 		while(true) {
 	    	int random = randInt(0, size-1);
-	    	int scenario = randInt(0, 3);
 	    	System.out.println(questionList.get(random) + '\n');
 	    	if (in.nextLine().equals("exit"))
 	    		break;
@@ -130,6 +131,18 @@ public class VocabHelper {
 	    	in.nextLine();
 
 	    	clearConsole();
+	    }
+
+	}
+	
+public static void rngTest() {
+
+		
+		while(true) {
+	    	int random = randInt(0, size-1);
+	    	System.out.println(random);
+	    	if (in.nextLine().equals("exit"))
+	    		break;
 	    }
 
 	}
