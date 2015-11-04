@@ -24,14 +24,14 @@ public class VocabHelper {
 			in = new Scanner(System.in);
 			int vocabNum;
 			do {
-		    	System.out.println("choose mode: choose vocab list 1, 2, or 3");
+		    	System.out.println("choose vocab list: full, first half, or second half");
 		    	vocabNum = in.nextInt();
 		    } while (vocabNum < 1 || vocabNum > 3);
 		    
 			File vocabList = null;
 		    //different casing modes
 		    switch (vocabNum) {
-			    case 1: vocabList = new File("resources/vocab_list_1_2.txt");
+			    case 1: vocabList = new File("resources/vocab5.txt");
 			    	break;
 			    case 2: vocabList = new File("resources/vocab_first_half.txt");
 			    	break;
@@ -53,9 +53,9 @@ public class VocabHelper {
 		    size = questionList.size();
 		    int mode = 0;
 		    do {
-		    	System.out.println("choose mode: with answers, without answers, or rng test");
+		    	System.out.println("choose mode: with answers, without answers, rng test, or adaptive");
 		    	mode = in.nextInt();
-		    } while (mode < 1 || mode > 3);
+		    } while (mode < 1 || mode > 4);
 		    
 		    //different casing modes
 		    switch (mode) {
@@ -64,6 +64,8 @@ public class VocabHelper {
 			    case 2: quizWithoutAnswers();
 			    	break;
 			    case 3: rngTest();
+			    	break;
+			    case 4: adaptiveTest();
 			    	break;
 		    
 		    }
@@ -78,6 +80,57 @@ public class VocabHelper {
 		} catch (FileNotFoundException e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+	// test that tests you more on things you get wrong
+	// does this by deleting entry when you get it right, adding another when you get it wrong
+	public static void adaptiveTest() {
+		while(questionList.size() >= 4) {
+	    	int random = randInt(0, size-1);
+	    	int scenario = randInt(0, 3);
+	    	System.out.println(questionList.get(random) + '\n');
+	    	
+	    	while (true) {
+	    		size = questionList.size();
+	    		int rand = randInt(0, answerList.size()-1);
+	    		if ((!randList.contains((Integer) rand)) && rand != random) {
+	    			randList.add(rand);
+	    		}
+	    		if (randList.size() == 3) {
+	    			break;
+	    		}
+	    	}
+
+	    	for (int i=0 ; i<4 ; i++) {
+	    		if (i == scenario)
+	    			System.out.println(answerList.get(random));
+	    		else {
+	    			System.out.println(answerList.get(randList.get(0)));
+	    			randList.remove(0);
+	    		}
+	    	}
+	    	int input = in.nextInt();
+	    	if(input - 1 == scenario) {
+	    		System.out.println("Correct!\n");
+	    		questionList.remove(random);
+	    		answerList.remove(random);
+	    	}
+	    	else if (input == 9)
+	    		break;
+	    	else {
+	    		System.out.println("Wrong. Answer is " + answerList.get(random) + "\n");
+	    		questionList.add(questionList.get(random));
+	    		answerList.add(answerList.get(random));
+	    	}
+	    	
+	    	randList.clear();
+	    	clearConsole();
+	    }
+		
+		System.out.println("Done! The last 4 are:");
+		for (int x = 0; x < 4; x++) {
+			System.out.println(questionList.get(x) + " is " + answerList.get(x));
+		}
 	}
 	
 	public static void quizWithAnswers() {
